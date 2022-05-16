@@ -13,7 +13,7 @@ const Movies: React.FC<Props> = ({}) => {
     const [movies, setMovies] = useState<Array<Movie>>();
     useEffect(() => {
         getMovies().then((response: AxiosResponse<MoviesResponse>) => {
-            let {data: {movies: tempMovies}, status } = response.data
+            let {data: {movies: tempMovies}, status} = response.data
             setMovies(tempMovies);
         })
     })
@@ -21,7 +21,8 @@ const Movies: React.FC<Props> = ({}) => {
     return (
         <View style={styles.container}>
             <FlatList data={movies}
-                      renderItem={({item}) => <View><Text style={{color: '#000'}}>{item.title}</Text></View>}/>
+                      renderItem={({item}) => <View key={item.id}><Text
+                          style={{color: '#000'}}>{item.title}</Text></View>}/>
         </View>
     );
 }
