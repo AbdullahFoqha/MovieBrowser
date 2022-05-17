@@ -1,5 +1,4 @@
-import {StatusBar} from 'expo-status-bar';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Movies from "./src/screens/movies";
 
 export default function App() {
