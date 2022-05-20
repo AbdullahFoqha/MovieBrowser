@@ -1,17 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet} from "react-native";
+import {Pressable, SafeAreaView, StyleSheet} from "react-native";
 import {getMovies} from '../api/moviesServies'
-import {AxiosResponse} from "axios";
 import Movie from "../api/models/movie";
-import MoviesResponse from "../api/models/moviesResponse";
 import RenderIf from "../utility/renderIf";
 import MovieSection from "../components/movieSection";
+import {useDispatch, useStore} from "react-redux";
+import {addPerson} from "../store/reducers/peopleReducer";
+import AppView from "../components/common/appView";
+import {toggleTheme} from "../store/reducers/configReducer";
+import {shuffleMovies} from "../store/reducers/moviesReducer";
 
 const Movies: React.FC = () => {
     const [drama, setDrama] = useState<Array<Movie>>();
     const [action, setAction] = useState<Array<Movie>>();
     const [horror, setHorror] = useState<Array<Movie>>();
     const [error, setError] = useState('');
+
+    const dispatch = useDispatch()
+    const store = useStore()
 
     const fetchTheData = async () => {
         const [
@@ -42,33 +48,35 @@ const Movies: React.FC = () => {
     }
 
     useEffect(() => {
+        // fetchTheData()
 
-        fetchTheData()
+        const unsubscribe = store.subscribe(() => {
+            console.log(store.getState())
+        })
 
-        // Promise.all([getMovies('drama'), getMovies('action'), getMovies('horror')]).then(response => {
-        //     setDrama(response[0].data.data.movies);
-        //     setAction(response[1].data.data.movies);
-        //     setHorror(response[2].data.data.movies);
-        // });
+        dispatch(addPerson({name: 'ALI ALI'}))
 
-        // getMovies().then((response: AxiosResponse<MoviesResponse>) => {
-        //     let {data: {movies: tempMovies}, status, status_message} = response.data
-        //     if (status === 'ok')
-        //         setMovies(tempMovies);
-        //     else
-        //         setError(status_message)
-        // })
+        return () => {
+            unsubscribe()
+        }
     })
 
 
     return (
-        <RenderIf condition={error === ''}>
-            <SafeAreaView style={styles.container}>
-                <MovieSection movies={action} section={'Action'}/>
-                <MovieSection movies={drama} section={'Drama'}/>
-                <MovieSection movies={horror} section={'Horror'}/>
-            </SafeAreaView>
-        </RenderIf>
+        // <RenderIf condition={error === ''}>
+        //     <SafeAreaView style={styles.container}>
+        //         <MovieSection movies={action} section={'Action'}/>
+        //         <MovieSection movies={drama} section={'Drama'}/>
+        //         <MovieSection movies={horror} section={'Horror'}/>
+        //     </SafeAreaView>
+        // </RenderIf>
+        <Pressable style={styles.container} onPress={() => {
+            dispatch(toggleTheme({id: 1}))
+            // dispatch(addPerson({name: 'ALI ALI'}))
+            // dispatch(shuffleMovies())
+        }}>
+            <AppView/>
+        </Pressable>
     );
 }
 
